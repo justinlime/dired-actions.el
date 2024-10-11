@@ -1,0 +1,54 @@
+* Table Of Contents :toc_4:
+- [[#dired-actions][Dired Actions]]
+  - [[#installation][Installation]]
+    - [[#use-package-vc][Use Package VC]]
+    - [[#quelpa-use-package][Quelpa Use Package]]
+  - [[#functions][Functions]]
+  - [[#hooks][Hooks]]
+
+* Dired Actions
+dired-actions allows you to preform various actions such as
+=copy/pasting=, =moving=, and =sym/hardlinking= files/dirs between Dired
+buffers.
+
+[[https://github.com/jwiegley/emacs-async][dired async]] is automatically supported when installed.
+
+[[./assets/dired.gif]]
+
+** Installation
+*** Use Package VC
+#+begin_src emacs-lisp
+(use-package dired-actions
+  :vc (dired-actions :url "https://github.com/justinlime/dired-actions.el")
+  :bind (("M-o y" . dired-actions-copy)
+         ("M-o p" . dired-actions-paste)
+         ("M-o m" . dired-actions-move)
+         ("M-o h" . dired-actions-hardlink)
+         ("M-o s" . dired-actions-symlink)
+         ("M-o l" . dired-actions-symlink-relative)))
+#+end_src
+*** Quelpa Use Package
+#+begin_src emacs-lisp
+(use-package dired-actions
+  :quelpa (dired-actions :fetcher github :repo "justinlime/dired-actions.el")
+  :bind (("M-o y" . dired-actions-copy)
+         ("M-o p" . dired-actions-paste)
+         ("M-o m" . dired-actions-move)
+         ("M-o h" . dired-actions-hardlink)
+         ("M-o s" . dired-actions-symlink)
+         ("M-o l" . dired-actions-symlink-relative)))
+#+end_src
+
+** Functions
+Dired Actions provides the following functions for use:
++ dired-actions-copy :: Copy selected file/s (or current file under cursor) to the file ring
++ dired-actions-move :: Move the file/s from the file ring to the current directory.
++ dired-actions-paste :: Paste the file/s from the file ring to the current directory.
++ dired-actions-hardlink :: Create a hardlink for the the file/s from the file ring to the current directory. (NOTE: Directories not supported)
++ dired-actions-symlink :: Create a symlink for the the file/s from the file ring to the current directory.
++ dired-actions-symlink-relative :: Create a relative symlink for the the file/s from the file ring to the current directory.
+
+** Hooks
+Dired Actions provides the following hooks for use:
++ dired-actions-post-action-hook :: A hook that is run after performing an action (excluding copy).
++ dired-actions-post-copy-hook :: A hook that is run after copying files to file ring.
