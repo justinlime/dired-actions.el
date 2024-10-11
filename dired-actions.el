@@ -53,13 +53,14 @@
 (defvar dired-actions--file-ring nil
   "The most recent copied files.")
 
-(defun dired-actions--execute (action action-name)
+(defun dired-actions--execute (action action-name file-list)
   "Execute a function to run for every item in the file ring.
 Argument ACTION argument to call with `dired-create-files' with as
 its' FILE-CREATOR.
-Argument ACTION-NAME The name of the action for logging."
+Argument ACTION-NAME The name of the action, used for logging.
+Argument FILE-LIST List of files to preform ACTION on."
   (dolist (file dired-actions--file-ring)
-    (dired-create-files action action-name dired-actions--file-ring
+    (dired-create-files action action-name file-list
       #'(lambda (file) (file-name-nondirectory (directory-file-name file)))))
   (setq dired-actions--file-ring nil)
   (revert-buffer)
@@ -75,12 +76,12 @@ Argument ACTION-NAME The name of the action for logging."
 (defun dired-actions-move ()
   "Move the file/s from the file ring to the current dir."
   (interactive)
-  (dired-actions--execute #'rename-file "MOVE"))
+  (dired-actions--execute #'rename-file "MOVE" dired-actions--file-ring))
 
 (defun dired-actions-paste ()
   "Paste the file/s from the file ring to the current dir."
   (interactive)
-  (dired-actions--execute #'dired-copy-file "PASTE"))
+  (dired-actions--execute #'dired-copy-file "PASTE" dired-actions--file-ring))
 
 ;; Hardlinking directories isnt supported by dired-hardlink,
 ;; also its just not a good idea
@@ -88,17 +89,20 @@ Argument ACTION-NAME The name of the action for logging."
   "Create a relative symlink for the file/s from the file ring to the current dir.
 DOES NOT WORK WITH DIRECTORIES IF PRESENT IN THE FILE RING."
   (interactive)
-  (dired-actions--execute #'dired-hardlink "HARD-LINK"))
+  ;; Ensure no directories attempt to hardlink
+  (dired-actions--execute #'dired-hardlink "HARD-LINK"
+    (delq nil (mapcar #'(lambda (file) (unless (file-directory-p file) file))
+        dired-actions--file-ring))))
 
 (defun dired-actions-symlink ()
   "Create a symlink for the the file/s from the file ring to the current dir."
   (interactive)
-  (dired-actions--execute #'make-symbolic-link "SYM-LINK"))
+  (dired-actions--execute #'make-symbolic-link "SYM-LINK" dired-actions--file-ring))
 
 (defun dired-actions-symlink-relative ()
   "Create a relative symlink for the the file/s from the file ring to the current dir."
   (interactive)
-  (dired-actions--execute #'dired-make-relative-symlink "RELATIVE SYM-LINK"))
+  (dired-actions--execute #'dired-make-relative-symlink "RELATIVE SYM-LINK" dired-actions--file-ring))
 
 (provide 'dired-actions)
 
