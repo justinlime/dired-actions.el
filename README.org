@@ -41,7 +41,7 @@ buffers.
 
 ** Functions
 Dired Actions provides the following functions for use:
-+ dired-actions-copy :: Copy selected file/s (or current file under cursor) to the file ring
++ dired-actions-copy :: Copy marked file/s (or current file under cursor) to the file ring
 + dired-actions-move :: Move the file/s from the file ring to the current directory.
 + dired-actions-paste :: Paste the file/s from the file ring to the current directory.
 + dired-actions-hardlink :: Create a hardlink for the the file/s from the file ring to the current directory. (NOTE: Directories not supported)
