@@ -54,7 +54,7 @@
   "The most recent copied files.")
 
 (defun dired-actions--execute (action action-name file-list)
-  "Execute a function to run for every item in the file ring.
+  "Execute a function to run for every item in the FILE-LIST.
 Argument ACTION argument to call with `dired-create-files' with as
 its' FILE-CREATOR.
 Argument ACTION-NAME The name of the action, used for logging.
